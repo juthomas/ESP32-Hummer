@@ -17,7 +17,7 @@ const char *ssid = "ESP32WIFI";
 const char *password = "44448888";
 WiFiUDP udp;
 
-uint8_t front_light_power = 0;
+uint8_t front_light_power = 10;
 
 
 void setup()
@@ -33,6 +33,8 @@ void setup()
   ledcAttachPin(MOTOR_2_A, BACKWARD_CHANNEL);
   ledcAttachPin(FRONT_LIGHT_1, FRONT_LIGHT_CHANNEL);
   ledcAttachPin(FRONT_LIGHT_2, FRONT_LIGHT_CHANNEL);
+  ledcWrite(FRONT_LIGHT_CHANNEL, front_light_power);
+
   // Configuration de l'ESP32 en tant que point d'accès
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid, password);
@@ -71,8 +73,8 @@ void loop()
       float r2 = doc["R2"];
 
 
-    ledcWrite(FORWARD_CHANNEL, r2);
-    ledcWrite(BACKWARD_CHANNEL, l2);
+    ledcWrite(FORWARD_CHANNEL, r2 * 255);
+    ledcWrite(BACKWARD_CHANNEL, l2 * 255);
 
     digitalWrite(MOTOR_1_A, left ? HIGH : LOW);
     digitalWrite(MOTOR_1_B, right ? HIGH : LOW);
